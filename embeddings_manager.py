@@ -18,7 +18,7 @@ chroma_client = chromadb.PersistentClient(path=embeddings_config["embeddings_pat
 collection_name = embeddings_config["collection_name"]
 collection = chroma_client.get_or_create_collection(
     name=collection_name,
-    embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction(embeddings_config["model_name"])
+    embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction(embeddings_config["embedding_function"])
 )
 
 def create_and_store_embeddings(documents, ids):

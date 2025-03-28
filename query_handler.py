@@ -3,6 +3,7 @@ from chromadb.utils import embedding_functions
 import os
 import groq
 from dotenv import load_dotenv
+import toml
 
 load_dotenv()
 
@@ -10,6 +11,7 @@ chroma_client = None
 collection = None
 groq_client = None
 embedding_function = None
+config = toml.load("config.toml")
 
 def initialize_clients():
     """Lazily initialize clients when needed"""
@@ -19,7 +21,7 @@ def initialize_clients():
         chroma_client = chromadb.PersistentClient(path="./embeddings")
 
     if embedding_function is None:
-        embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction("all-MiniLM-L6-v2")
+        embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(config["embeddings"]["embeddings_function"])
 
     if collection is None:
         collection_name = "notes_collection"
@@ -46,7 +48,7 @@ def relevant_documents(query_text, n_results=3):
     context = "\n\n".join([f"Document '{doc_id}':\n{doc}" for doc_id, doc in zip(document_ids, documents)])
     return context, document_ids
 
-def query_with_llm(query_text, n_results=3, model_name="llama3-8b-8192"):
+def query_with_llm(query_text, n_results=3, model_name=config["llm"]["model_name"]):
     _, _, groq_client = initialize_clients()
 
     context, document_ids = relevant_documents(query_text, n_results)
@@ -77,8 +79,6 @@ def query_with_llm(query_text, n_results=3, model_name="llama3-8b-8192"):
     )
 
     llm_output = response.choices[0].message.content
-
-    # Append file references to the output
     output_with_references = "\n\n".join(
         [f"From file '{doc_id}':\n{llm_output}" for doc_id in document_ids]
     )
