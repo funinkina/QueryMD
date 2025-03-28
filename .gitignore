@@ -1,0 +1,7 @@
+.ropeproject
+*embeddings
+__pycache__
+*checkpoint
+*model.ckpt-*
+*model.ckpt.meta
+*model.ckpt.index

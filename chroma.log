@@ -1,0 +1,42 @@
+[32mINFO[0m:     [28-03-2025 01:06:22] Set chroma_server_nofile to 65535
+[32mINFO[0m:     [28-03-2025 01:06:23] Anonymized telemetry enabled. See                     https://docs.trychroma.com/telemetry for more information.
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component System
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component OpenTelemetryClient
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component SqliteDB
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component Posthog
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component LocalSegmentManager
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component LocalExecutor
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component SegmentAPI
+[36mDEBUG[0m:    [28-03-2025 01:06:23] Starting component SimpleAsyncRateLimitEnforcer
+[32mINFO[0m:     [28-03-2025 01:06:23] Started server process [[36m8773[0m]
+[32mINFO[0m:     [28-03-2025 01:06:23] Waiting for application startup.
+[32mINFO[0m:     [28-03-2025 01:06:23] Application startup complete.
+[32mINFO[0m:     [28-03-2025 01:06:23] Uvicorn running on [1mhttp://localhost:8000[0m (Press CTRL+C to quit)
+[33mWARNING[0m:  [28-03-2025 01:06:23] Retrying (Retry(total=1, connect=1, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x79182715bb50>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[33mWARNING[0m:  [28-03-2025 01:06:24] Retrying (Retry(total=0, connect=0, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7918270e73d0>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[32mINFO[0m:     [28-03-2025 01:06:24] Backing off send_request(...) for 0.7s (requests.exceptions.ConnectionError: HTTPSConnectionPool(host='us.i.posthog.com', port=443): Max retries exceeded with url: /batch/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7918270e7e10>: Failed to establish a new connection: [Errno 111] Connection refused')))
+[33mWARNING[0m:  [28-03-2025 01:06:24] Retrying (Retry(total=1, connect=1, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x7918247417d0>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[33mWARNING[0m:  [28-03-2025 01:06:25] Retrying (Retry(total=0, connect=0, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824741f50>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[32mINFO[0m:     [28-03-2025 01:06:25] Backing off send_request(...) for 1.0s (requests.exceptions.ConnectionError: HTTPSConnectionPool(host='us.i.posthog.com', port=443): Max retries exceeded with url: /batch/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824742750>: Failed to establish a new connection: [Errno 111] Connection refused')))
+[33mWARNING[0m:  [28-03-2025 01:06:26] Retrying (Retry(total=1, connect=1, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824743590>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[33mWARNING[0m:  [28-03-2025 01:06:26] Retrying (Retry(total=0, connect=0, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824743d10>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[32mINFO[0m:     [28-03-2025 01:06:26] Backing off send_request(...) for 1.9s (requests.exceptions.ConnectionError: HTTPSConnectionPool(host='us.i.posthog.com', port=443): Max retries exceeded with url: /batch/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824758550>: Failed to establish a new connection: [Errno 111] Connection refused')))
+[33mWARNING[0m:  [28-03-2025 01:06:28] Retrying (Retry(total=1, connect=1, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824759410>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[33mWARNING[0m:  [28-03-2025 01:06:28] Retrying (Retry(total=0, connect=0, read=2, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x791824759b90>: Failed to establish a new connection: [Errno 111] Connection refused')': /batch/
+[31mERROR[0m:    [28-03-2025 01:06:28] Giving up send_request(...) after 4 tries (requests.exceptions.ConnectionError: HTTPSConnectionPool(host='us.i.posthog.com', port=443): Max retries exceeded with url: /batch/ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x79182475a390>: Failed to establish a new connection: [Errno 111] Connection refused')))
+[32mINFO[0m:     [28-03-2025 01:14:29] Shutting down
+[32mINFO[0m:     [28-03-2025 01:14:29] Waiting for application shutdown.
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component System
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component SegmentAPI
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component LocalExecutor
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component LocalSegmentManager
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component SimpleAsyncRateLimitEnforcer
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component SimpleRateLimitEnforcer
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component Posthog
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component SimpleQuotaEnforcer
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component SqliteDB
+[36mDEBUG[0m:    [28-03-2025 01:14:29] Stopping component OpenTelemetryClient
+[32mINFO[0m:     [28-03-2025 01:14:29] Application shutdown complete.
+[32mINFO[0m:     [28-03-2025 01:14:29] Finished server process [[36m8773[0m]
