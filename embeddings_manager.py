@@ -3,9 +3,6 @@ import chromadb
 from chromadb.utils import embedding_functions
 import os
 import glob
-from dotenv import load_dotenv
-
-load_dotenv()
 
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
