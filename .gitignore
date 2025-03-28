@@ -5,3 +5,6 @@ __pycache__
 *model.ckpt-*
 *model.ckpt.meta
 *model.ckpt.index
+.venv
+.env
+*.log
