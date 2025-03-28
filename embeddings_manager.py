@@ -3,15 +3,22 @@ import chromadb
 from chromadb.utils import embedding_functions
 import os
 import glob
+import toml
 
-model = SentenceTransformer('all-MiniLM-L6-v2')
+# Load configuration
+config = toml.load("config.toml")
+embeddings_config = config["embeddings"]
+files_config = config["files"]
 
-chroma_client = chromadb.PersistentClient(path="./embeddings")
+# Initialize model and client based on config
+model = SentenceTransformer(embeddings_config["model_name"])
 
-collection_name = "notes_collection"
+chroma_client = chromadb.PersistentClient(path=embeddings_config["embeddings_path"])
+
+collection_name = embeddings_config["collection_name"]
 collection = chroma_client.get_or_create_collection(
     name=collection_name,
-    embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction("all-MiniLM-L6-v2")
+    embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction(embeddings_config["model_name"])
 )
 
 def create_and_store_embeddings(documents, ids):
@@ -40,7 +47,7 @@ def read_markdown_files(directory):
     return documents, ids
 
 if __name__ == "__main__":
-    markdown_directory = "/home/funinkina/Notes/"
+    markdown_directory = files_config["markdown_directory"]
 
     documents, ids = read_markdown_files(markdown_directory)
 
@@ -48,4 +55,3 @@ if __name__ == "__main__":
         print("No markdown files found in the specified directory.")
     else:
         create_and_store_embeddings(documents, ids)
-        pass
