@@ -79,11 +79,11 @@ def query_with_llm(query_text, n_results=3, model_name=config["llm"]["model_name
     )
 
     llm_output = response.choices[0].message.content
-    output_with_references = "\n\n".join(
-        [f"From file '{doc_id}':\n{llm_output}" for doc_id in document_ids]
-    )
+    # output_with_references = "\n\n".join(
+    #     [f"From file '{doc_id}':\n{llm_output}" for doc_id in document_ids]
+    # )
 
-    return output_with_references
+    return llm_output
 
 if __name__ == "__main__":
     user_query = input("Enter your query: ")

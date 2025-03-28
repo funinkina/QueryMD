@@ -1,6 +1,8 @@
 # QueryMD
 ## Ask and query your markdown notes using AI
 
+![Screenshot](Screenshot.png)
+
 It uses ChromaDB as a vector database to store the embeddings of your notes and Groq AI interface to query them. Embeddings are generated using ChromaDB's built-in embedding model - SentenceTransformer.
 
 ## Installation
