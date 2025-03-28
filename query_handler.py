@@ -6,17 +6,36 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-chroma_client = chromadb.PersistentClient(path="./embeddings")
+chroma_client = None
+collection = None
+groq_client = None
+embedding_function = None
 
-collection_name = "notes_collection"
-collection = chroma_client.get_or_create_collection(
-    name=collection_name,
-    embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction("all-MiniLM-L6-v2")
-)
+def initialize_clients():
+    """Lazily initialize clients when needed"""
+    global chroma_client, collection, groq_client, embedding_function
 
-groq_client = groq.Client(api_key=os.environ.get("GROQ_API_KEY"))
+    if chroma_client is None:
+        chroma_client = chromadb.PersistentClient(path="./embeddings")
+
+    if embedding_function is None:
+        embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction("all-MiniLM-L6-v2")
+
+    if collection is None:
+        collection_name = "notes_collection"
+        collection = chroma_client.get_or_create_collection(
+            name=collection_name,
+            embedding_function=embedding_function
+        )
+
+    if groq_client is None:
+        groq_client = groq.Client(api_key=os.environ.get("GROQ_API_KEY"))
+
+    return chroma_client, collection, groq_client
 
 def relevant_documents(query_text, n_results=3):
+    _, collection, _ = initialize_clients()
+
     results = collection.query(query_texts=[query_text], n_results=n_results)
     documents = results.get('documents', [[]])[0]
     document_ids = results.get('ids', [[]])[0]
@@ -28,6 +47,8 @@ def relevant_documents(query_text, n_results=3):
     return context, document_ids
 
 def query_with_llm(query_text, n_results=3, model_name="llama3-8b-8192"):
+    _, _, groq_client = initialize_clients()
+
     context, document_ids = relevant_documents(query_text, n_results)
 
     if not context:
