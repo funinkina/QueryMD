@@ -4,6 +4,7 @@ from chromadb.utils import embedding_functions
 import os
 import glob
 import toml
+from pathlib import Path
 
 config = toml.load("config.toml")
 embeddings_config = config["embeddings"]
@@ -19,42 +20,41 @@ collection = chroma_client.get_or_create_collection(
     embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction(embeddings_config["embeddings_function"])
 )
 
-def create_and_store_embeddings(documents, ids, metadata_list):
-    if len(documents) != len(ids) or len(documents) != len(metadata_list):
-        raise ValueError("The number of documents, IDs, and metadata must match.")
 
-    embeddings = model.encode(documents, show_progress_bar=True)
+def remove_document_from_collection(doc_id):
+    """Remove a document from the collection by its ID."""
+    try:
+        collection.delete(ids=[doc_id])
+        print(f"Successfully removed document with ID: {doc_id}")
+    except Exception as e:
+        print(f"Error removing document {doc_id}: {e}")
 
-    collection.add(
-        documents=documents,
-        embeddings=embeddings,
-        ids=ids,
-        metadatas=metadata_list,  # Add metadata to the collection
-    )
-    print(f"Successfully added {len(documents)} documents to the collection.")
-
-def read_markdown_files(directory):
-    markdown_files = glob.glob(os.path.join(directory, "**", "*.md"), recursive=True)
-    documents = []
-    ids = []
-    metadata_list = []
-
-    for file_path in markdown_files:
+def process_file_for_embeddings(file_path, base_dir):
+    """Process a single file and add its embeddings to the collection."""
+    try:
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
-            documents.append(content)
-            ids.append(os.path.relpath(file_path, directory))  # Use relative path as ID
-            title = content.splitlines()[0].strip() if content else "Untitled"  # Extract the first line as title
-            metadata_list.append({"title": title})  # Add title as metadata
 
-    return documents, ids, metadata_list
+            # Create a relative path for the document ID
+            path_obj = Path(file_path)
+            base_dir_obj = Path(base_dir).resolve()
+            doc_id = str(path_obj.relative_to(base_dir_obj))
 
-if __name__ == "__main__":
-    markdown_directory = files_config["markdown_directory"]
+            # Extract title from the first line
+            title = content.splitlines()[0].strip() if content else "Untitled"
+            metadata = {"title": title}
 
-    documents, ids, metadata_list = read_markdown_files(markdown_directory)
+            # Generate embedding
+            embedding = model.encode([content])[0]
 
-    if not documents:
-        print("No markdown files found in the specified directory.")
-    else:
-        create_and_store_embeddings(documents, ids, metadata_list)
+            # Add to collection
+            collection.add(
+                documents=[content],
+                embeddings=[embedding],
+                ids=[doc_id],
+                metadatas=[metadata]
+            )
+            print(f"Successfully added document: {doc_id}")
+
+    except Exception as e:
+        print(f"Error processing file {file_path}: {e}")

@@ -5,6 +5,7 @@ embeddings_path = "./embeddings"
 
 [files]
 markdown_directory = "/home/funinkina/Notes/"
+state_file = "./.state.json"
 
 [llm]
 model_name = "llama3-8b-8192"
