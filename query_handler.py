@@ -48,7 +48,7 @@ def relevant_documents(query_text, n_results=3):
     context = "\n\n".join([f"Document '{doc_id}':\n{doc}" for doc_id, doc in zip(document_ids, documents)])
     return context, document_ids
 
-def query_with_llm(query_text, n_results=3, model_name=config["llm"]["model_name"]):
+def query_with_llm(query_text, n_results=3):
     _, _, groq_client = initialize_clients()
 
     context, document_ids = relevant_documents(query_text, n_results)
@@ -61,7 +61,7 @@ def query_with_llm(query_text, n_results=3, model_name=config["llm"]["model_name
             ANSWER: ?
             """
     response = groq_client.chat.completions.create(
-        model=model_name,
+        model=config["llm"]["model_name"],
         messages=[
             {
                 "role": "system",

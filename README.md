@@ -44,9 +44,9 @@ GROQ_API_KEY=<your_groq_api_key>
 ```bash
 python create_embeddings.py
 ```
-### 2. Run the script to query the embeddings
+### 2. Run the app to get the query
 ```bash
-python query_embeddings.py
+python app.py
 ```
 It will ask you for a query. You can enter any keyword or phrase related to your notes. It will return the most relevant notes based on the query.
 
@@ -56,3 +56,4 @@ It will ask you for a query. You can enter any keyword or phrase related to your
 - [ ] Better query results
 - [ ] Better embeddings model
 - [ ] Improve Documentation
+- [ ] Include note references in the query results
