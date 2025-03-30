@@ -14,7 +14,7 @@ embedding_function = None
 config = toml.load("config.toml")
 
 def initialize_clients():
-    """Lazily initialize clients when needed"""
+    """Initialize clients when needed"""
     global chroma_client, collection, groq_client, embedding_function
 
     if chroma_client is None:
@@ -78,12 +78,7 @@ def query_with_llm(query_text, n_results=3):
         max_tokens=1024
     )
 
-    llm_output = response.choices[0].message.content
-    # output_with_references = "\n\n".join(
-    #     [f"From file '{doc_id}':\n{llm_output}" for doc_id in document_ids]
-    # )
-
-    return llm_output
+    return response.choices[0].message.content
 
 if __name__ == "__main__":
     user_query = input("Enter your query: ")
