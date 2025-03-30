@@ -1,85 +1,94 @@
-import chromadb
-from chromadb.utils import embedding_functions
 import os
 import groq
 from dotenv import load_dotenv
 import toml
-from sentence_transformers import SentenceTransformer  # Import SentenceTransformer
+from embeddings_manager import get_chroma_collection, get_embedding_model
 
 load_dotenv()
 
-chroma_client = None
-collection = None
-groq_client = None
-embedding_function = None
+_groq_client = None
 config = toml.load("config.toml")
 
+def initialize_groq_client():
+    """Initialize Groq client when needed"""
+    global _groq_client
+    if _groq_client is None:
+        print("Initializing Groq client...")
+        api_key = os.environ.get("GROQ_API_KEY")
+        if not api_key:
+            raise ValueError("GROQ_API_KEY environment variable not set.")
+        _groq_client = groq.Client(api_key=api_key)
+        print("Groq client initialized.")
+    return _groq_client
+
 def initialize_clients():
-    """Initialize clients when needed"""
-    global chroma_client, collection, groq_client, embedding_function
+    """Ensure necessary clients are ready (Groq). Chroma is handled by its getter."""
+    initialize_groq_client()
+    get_chroma_collection()
 
-    if chroma_client is None:
-        chroma_client = chromadb.PersistentClient(path=config["embeddings"]["embeddings_path"])
-
-    if embedding_function is None:
-        # Initialize SentenceTransformer model instead of embedding function
-        embedding_function = SentenceTransformer(config["embeddings"]["embeddings_function"])
-
-    if collection is None:
-        collection_name = config["embeddings"]["collection_name"]
-        collection = chroma_client.get_or_create_collection(
-            name=collection_name
-        )
-
-    if groq_client is None:
-        groq_client = groq.Client(api_key=os.environ.get("GROQ_API_KEY"))
-
-    return chroma_client, collection, groq_client, embedding_function
 
 def relevant_documents(query_text, n_results=3):
-    _, collection, _, _ = initialize_clients()  # Adjust unpacking to match returned values
+    collection = get_chroma_collection()
+    print(f"Querying collection for: '{query_text}'")
+    results = collection.query(
+        query_texts=[query_text],
+        n_results=n_results,
+        include=['documents']
+    )
 
-    results = collection.query(query_texts=[query_text], n_results=n_results)
     documents = results.get('documents', [[]])[0]
     document_ids = results.get('ids', [[]])[0]
 
     if not documents:
+        print("No relevant documents found in collection.")
         return None, None
 
+    if not document_ids:
+        print("Warning: Query returned documents but no IDs.")
+
+    print(f"Found {len(documents)} relevant documents: {document_ids}")
     context = "\n\n".join([f"Document '{doc_id}':\n{doc}" for doc_id, doc in zip(document_ids, documents)])
     return context, document_ids
 
 def query_with_llm(query_text, n_results=3):
-    _, _, groq_client, _ = initialize_clients()  # Adjust unpacking to match returned values
+    groq_client = initialize_groq_client()
 
-    context, document_ids = relevant_documents(query_text, n_results)
+    context, _ = relevant_documents(query_text, n_results)
 
     if not context:
-        return "No relevant documents found for your query."
+        return "I looked through the available documents, but couldn't find specific information related to your query."
 
     prompt = f"""
-            QUESTION: '{query_text}'
-            ANSWER: ?
-            """
-    response = groq_client.chat.completions.create(
-        model=config["llm"]["model_name"],
-        messages=[
-            {
-                "role": "system",
-                "content": (
-                    "You are a helpful and informative bot that answers questions using text from the reference passage included below. "
-                    "Be sure to respond in a complete sentence, being comprehensive, including all relevant background information. "
-                    "However, you are talking to a non-technical audience, so be sure to break down complicated concepts and strike a friendly and conversational tone. "
-                    f"Relevant Context: '{context}'"
-                )
-            },
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.1,
-        max_tokens=1024
-    )
+                You are a helpful and informative bot. Your task is to answer the user's QUESTION based *only* on the provided RELEVANT CONTEXT.
+                Be comprehensive and include relevant background information found *within the context*.
+                Speak to a non-technical audience: break down complex concepts using simple language, and adopt a friendly and conversational tone.
+                Respond in complete sentences. If the context does not contain the answer, state that clearly.
 
-    return response.choices[0].message.content
+                RELEVANT CONTEXT:
+                ---
+                {context}
+                ---
+
+                QUESTION: '{query_text}'
+
+                ANSWER:"""
+
+    print("Sending query to LLM...")
+    try:
+        response = groq_client.chat.completions.create(
+            model=config["llm"]["model_name"],
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.1,
+            max_tokens=1024
+        )
+        print("LLM response received.")
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error querying LLM: {e}")
+        return "Sorry, I encountered an error while trying to generate a response."
+
 
 if __name__ == "__main__":
     user_query = input("Enter your query: ")
