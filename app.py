@@ -19,9 +19,7 @@ async def main():
     try:
         with progress:
             task = progress.add_task("Checking file states & updating embeddings...", total=None)
-
             changes_detected = await asyncio.to_thread(check_files_state)
-
             progress.remove_task(task)
 
     except Exception as e:
@@ -34,8 +32,16 @@ async def main():
             return
 
         response_content = ""
+        referenced_ids = None
+
         with console.status("[bold cyan]Searching documents and asking the LLM...", spinner="dots"):
-            response_content = query_with_llm(query)
+            response_content, referenced_ids = query_with_llm(query)
+
+        if referenced_ids:
+            console.print("\n[bold yellow]Referencing documents:[/bold yellow]")
+            for doc_id in referenced_ids:
+                console.print(f"- [dim]{doc_id}[/dim]")
+            console.print()
 
         if response_content:
             response_md = Markdown(response_content)

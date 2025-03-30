@@ -119,10 +119,9 @@ def check_files_state():
 
         if relative_paths_to_remove:
             for doc_id in relative_paths_to_remove:
-                print(f"    - Queuing removal for ID: {doc_id}")
+                # print(f"    - Queuing removal for ID: {doc_id}")
                 remove_document_from_collection(doc_id)
 
-    # Process new/modified files
     if files_to_process:
         print("  - Processing and embedding new/modified files...")
         for file_path_str in files_to_process:
