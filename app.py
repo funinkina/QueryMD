@@ -1,7 +1,3 @@
-import time
-
-start_time = time.perf_counter()
-
 import asyncio
 from rich.console import Console
 from rich.markdown import Markdown
@@ -9,9 +5,7 @@ from rich.progress import Progress, SpinnerColumn, TextColumn
 from check_state import check_files_state
 from query_handler import query_with_llm
 
-import_time = time.perf_counter() - start_time
 console = Console()
-console.print(f"Initial imports completed in {import_time:.2f} seconds.", style="cyan")
 
 async def main():
     progress = Progress(
