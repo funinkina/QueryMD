@@ -46,11 +46,8 @@ GROQ_API_KEY=<your_groq_api_key>
 ```
 
 ## Usage
-### 1. Run the script to create the embeddings
-```bash
-python create_embeddings.py
-```
-### 2. Run the app to get the query
+### 1. Run the script 
+It will automatically create the embeddings for your notes and store them in the specified path defined in the config. It will also create a state file to keep track of the embeddings.
 ```bash
 python app.py
 ```
