@@ -81,6 +81,7 @@ def process_file_for_embeddings(file_path, base_dir):
             except Exception as encode_err:
                 print(f"Error encoding content from {file_path}: {encode_err}")
                 return
+
             try:
                 collection.add(
                     documents=[content],
