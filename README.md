@@ -3,7 +3,7 @@
 
 ![Screenshot](Screenshot.png)
 
-It uses ChromaDB as a vector database to store the embeddings of your notes and Groq AI interface to query them. Embeddings are generated using ChromaDB's built-in embedding model - SentenceTransformer.
+It uses ChromaDB as a vector database to store the embeddings of your notes and Groq AI or OpenAI interface to query them. Embeddings are generated using ChromaDB's built-in embedding model - SentenceTransformer and are saved locally only.
 
 ## Installation
 ### 1. Clone the repository
@@ -34,15 +34,23 @@ markdown_directory = "/home/funinkina/Notes/"
 state_file = "/home/funinkina/Notes/.state.json"
 
 [llm]
+provider = "groq" # Options: "groq" or "openai"
 model_name = "llama3-8b-8192"
+# model_name = "gpt-4o"
 temperature = 0.5
 additonal_info = "True"
 ```
+For additional models, you can check the [Groq](https://console.groq.com/keys) and [OpenAI](https://platform.openai.com/docs/models) documentation.
 
 ### 5. Set up your environment variables
-You need a Groq API key to use the Groq AI interface. You can get one from [here](https://console.groq.com/keys). And put it in `.env`
+You can use **Groq** or **OpenAI** as your LLM providers.
+- Get Groq API keys [here](https://console.groq.com/keys).
+- Get OpenAI API keys [here](https://platform.openai.com/account/api-keys).
+And put it in `.env`
+
 ```bash
 GROQ_API_KEY=<your_groq_api_key>
+OPENAI_API_KEY=<your_openai_api_key>
 ```
 
 ## Usage
@@ -61,3 +69,10 @@ It will ask you for a query. You can enter any keyword or phrase related to your
 - [ ] Improve Documentation
 - [x] Include note references in the query results
 - [ ] Give more AI inferences options
+
+## You can read privacy policies of LLM providers here to know more about how your data is being used:
+- [Groq](https://groq.com/privacy-policy/)
+- [OpenAI](https://platform.openai.com/docs/guides/your-data)
+  
+## License
+This project is licensed under the GNU GPL License. See the [LICENSE](LICENSE) file for details.

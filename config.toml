@@ -8,6 +8,8 @@ markdown_directory = "/home/funinkina/Notes/"
 state_file = "/home/funinkina/Notes/.state.json"
 
 [llm]
+provider = "groq" # Options: "groq" or "openai"
 model_name = "llama3-8b-8192"
+# model_name = "gpt-4o"
 temperature = 0.5
 additonal_info = "True"
