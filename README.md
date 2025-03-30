@@ -31,14 +31,14 @@ embeddings_path = "/home/funinkina/Notes/.embeddings"
 
 [files]
 markdown_directory = "/home/funinkina/Notes/"
-state_file = "/home/funinkina/Notes/.state.json"
+state_file = "/home/funinkina/Notes/.state.json" # used to track your notes
 
 [llm]
 provider = "groq" # Options: "groq" or "openai"
 model_name = "llama3-8b-8192"
-# model_name = "gpt-4o"
+# model_name = "gpt-4o" # when using OpenAI
 temperature = 0.5
-additonal_info = "True"
+additonal_info = "True" # Set to false to disable additional info from the llm
 ```
 For additional models, you can check the [Groq](https://console.groq.com/keys) and [OpenAI](https://platform.openai.com/docs/models) documentation.
 
@@ -46,6 +46,7 @@ For additional models, you can check the [Groq](https://console.groq.com/keys) a
 You can use **Groq** or **OpenAI** as your LLM providers.
 - Get Groq API keys [here](https://console.groq.com/keys).
 - Get OpenAI API keys [here](https://platform.openai.com/account/api-keys).
+
 And put it in `.env`
 
 ```bash
