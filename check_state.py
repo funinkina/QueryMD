@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 import toml
 from embeddings_manager import remove_document_from_collection, process_file_for_embeddings
+from query_handler import initialize_clients
 
 config = toml.load("config.toml")
 
@@ -29,6 +30,8 @@ def is_markdown_file(file_path):
     return file_path.suffix.lower() in extensions
 
 def check_files_state():
+    _, collection, _, model = initialize_clients()
+
     previous_state = load_previous_state(STATE_FILE)
     current_state = {}
     found_files = set()
@@ -82,11 +85,14 @@ def check_files_state():
         if file_path_str in previous_state:
             print(f"  - Removing old embeddings for: {file_path_str}")
             relative_path = Path(file_path_str).relative_to(DOCUMENTS_DIR.resolve())
-            remove_document_from_collection(str(relative_path))
+            try:
+                remove_document_from_collection(str(relative_path), collection)
+            except Exception as e:
+                print(f"Error removing document for {relative_path}: {e}")
 
     for file_path_str in files_to_process:
         print(f"  - Processing/Embedding: {file_path_str}")
-        process_file_for_embeddings(file_path_str, DOCUMENTS_DIR)
+        process_file_for_embeddings(file_path_str, DOCUMENTS_DIR, model, collection)
 
     print("Processing complete.")
     save_current_state(current_state, STATE_FILE)

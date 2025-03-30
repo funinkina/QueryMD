@@ -7,7 +7,6 @@ from query_handler import query_with_llm, initialize_clients
 console = Console()
 
 async def main():
-    # Run check_files_state and initialize_clients concurrently
     changes_detected, _ = await asyncio.gather(
         asyncio.to_thread(check_files_state),
         asyncio.to_thread(initialize_clients)

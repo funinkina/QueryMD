@@ -4,6 +4,7 @@ import os
 import groq
 from dotenv import load_dotenv
 import toml
+from sentence_transformers import SentenceTransformer  # Import SentenceTransformer
 
 load_dotenv()
 
@@ -18,25 +19,25 @@ def initialize_clients():
     global chroma_client, collection, groq_client, embedding_function
 
     if chroma_client is None:
-        chroma_client = chromadb.PersistentClient(path="./embeddings")
+        chroma_client = chromadb.PersistentClient(path=config["embeddings"]["embeddings_path"])
 
     if embedding_function is None:
-        embedding_function = embedding_functions.SentenceTransformerEmbeddingFunction(config["embeddings"]["embeddings_function"])
+        # Initialize SentenceTransformer model instead of embedding function
+        embedding_function = SentenceTransformer(config["embeddings"]["embeddings_function"])
 
     if collection is None:
-        collection_name = "notes_collection"
+        collection_name = config["embeddings"]["collection_name"]
         collection = chroma_client.get_or_create_collection(
-            name=collection_name,
-            embedding_function=embedding_function
+            name=collection_name
         )
 
     if groq_client is None:
         groq_client = groq.Client(api_key=os.environ.get("GROQ_API_KEY"))
 
-    return chroma_client, collection, groq_client
+    return chroma_client, collection, groq_client, embedding_function
 
 def relevant_documents(query_text, n_results=3):
-    _, collection, _ = initialize_clients()
+    _, collection, _, _ = initialize_clients()  # Adjust unpacking to match returned values
 
     results = collection.query(query_texts=[query_text], n_results=n_results)
     documents = results.get('documents', [[]])[0]
@@ -49,7 +50,7 @@ def relevant_documents(query_text, n_results=3):
     return context, document_ids
 
 def query_with_llm(query_text, n_results=3):
-    _, _, groq_client = initialize_clients()
+    _, _, groq_client, _ = initialize_clients()  # Adjust unpacking to match returned values
 
     context, document_ids = relevant_documents(query_text, n_results)
 

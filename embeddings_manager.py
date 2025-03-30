@@ -1,8 +1,6 @@
 from sentence_transformers import SentenceTransformer
 import chromadb
 from chromadb.utils import embedding_functions
-import os
-import glob
 import toml
 from pathlib import Path
 
@@ -21,7 +19,7 @@ collection = chroma_client.get_or_create_collection(
 )
 
 
-def remove_document_from_collection(doc_id):
+def remove_document_from_collection(doc_id, collection):
     """Remove a document from the collection by its ID."""
     try:
         collection.delete(ids=[doc_id])
@@ -29,25 +27,19 @@ def remove_document_from_collection(doc_id):
     except Exception as e:
         print(f"Error removing document {doc_id}: {e}")
 
-def process_file_for_embeddings(file_path, base_dir):
+def process_file_for_embeddings(file_path, base_dir, model, collection):
     """Process a single file and add its embeddings to the collection."""
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
-
-            # Create a relative path for the document ID
             path_obj = Path(file_path)
             base_dir_obj = Path(base_dir).resolve()
             doc_id = str(path_obj.relative_to(base_dir_obj))
 
-            # Extract title from the first line
             title = content.splitlines()[0].strip() if content else "Untitled"
             metadata = {"title": title}
-
-            # Generate embedding
             embedding = model.encode([content])[0]
 
-            # Add to collection
             collection.add(
                 documents=[content],
                 embeddings=[embedding],
