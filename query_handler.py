@@ -49,12 +49,14 @@ def query_with_llm(query_text, n_results=3):
     if not context:
         return "I looked through the available documents, but couldn't find specific information related to your query.", None
 
-    prompt = f"""
-                You are a helpful and informative bot. Your task is to answer the user's QUESTION based *only* on the provided RELEVANT CONTEXT.
-                Be comprehensive and include relevant background information found *within the context*.
-                Speak to a non-technical audience: break down complex concepts using simple language, and adopt a friendly and conversational tone.
-                Respond in complete sentences. If the context does not contain the answer, state that clearly.
+    system_prompt = """
+                You are a helpful assistant to provide user with the relevant information from the documents.
+                You will be given the context below which is extarcted from the user's notes.
+                Your task is to answer the user's question based on the context provided and also list the context from which you derived the answer.
+                The included context might include some irrelevant information, so extract the relevant information from the context and provide the answer to the user's question.
+                """
 
+    user_context = f"""
                 RELEVANT CONTEXT:
                 ---
                 {context}
@@ -62,14 +64,15 @@ def query_with_llm(query_text, n_results=3):
 
                 QUESTION: '{query_text}'
 
-                ANSWER:"""
+                """
     try:
         response = groq_client.chat.completions.create(
             model=config["llm"]["model_name"],
             messages=[
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_context}
             ],
-            temperature=0.1,
+            temperature=0.5,
             max_tokens=1024
         )
         llm_content = response.choices[0].message.content
