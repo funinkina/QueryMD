@@ -1,9 +1,8 @@
 import os
 import json
-import time
 from pathlib import Path
 import toml
-from embeddings_manager import remove_document_from_collection, process_file_for_embeddings, get_chroma_collection, get_embedding_model
+from embeddings_manager import remove_document_from_collection, process_file_for_embeddings
 
 config = toml.load("config.toml")
 
@@ -78,10 +77,10 @@ def check_files_state():
 
                 prev_file_state = previous_state.get(abs_path_str)
                 if not prev_file_state:
-                    print(f"Detected new file: {file_path.relative_to(DOCUMENTS_DIR)}")
+                    # print(f"Detected new file: {file_path.relative_to(DOCUMENTS_DIR)}")
                     files_to_process.append(abs_path_str)
                 elif (prev_file_state['mtime'] != current_mtime or prev_file_state['size'] != current_size):
-                    print(f"Detected modified file: {file_path.relative_to(DOCUMENTS_DIR)}")
+                    # print(f"Detected modified file: {file_path.relative_to(DOCUMENTS_DIR)}")
                     files_to_process.append(abs_path_str)
 
             except OSError as e:
@@ -95,7 +94,7 @@ def check_files_state():
 
     if deleted_files_abs:
         deleted_relative = [str(Path(p).relative_to(DOCUMENTS_DIR)) for p in deleted_files_abs]
-        print(f"Detected deleted files: {', '.join(deleted_relative)}")
+        # print(f"Detected deleted files: {', '.join(deleted_relative)}")
 
     if not files_to_process and not files_to_remove:
         print("No changes detected in markdown files.")
@@ -107,7 +106,7 @@ def check_files_state():
     files_needing_removal_in_db = files_to_remove + files_to_process
 
     if files_needing_removal_in_db:
-        print("  - Removing outdated/deleted document embeddings...")
+        # print("  - Removing outdated/deleted document embeddings...")
         relative_paths_to_remove = set()
         for file_path_str in files_needing_removal_in_db:
             if file_path_str in previous_state:
@@ -123,23 +122,20 @@ def check_files_state():
                 remove_document_from_collection(doc_id)
 
     if files_to_process:
-        print("  - Processing and embedding new/modified files...")
+        # print("  - Processing and embedding new/modified files...")
         for file_path_str in files_to_process:
             relative_path = str(Path(file_path_str).relative_to(DOCUMENTS_DIR))
             print(f"    - Processing: {relative_path}")
             process_file_for_embeddings(file_path_str, DOCUMENTS_DIR)
 
-    print("Change processing complete.")
+    # print("Change processing complete.")
     save_current_state(current_state, STATE_FILE)
     return changes_made
 
 
 if __name__ == "__main__":
-    start_time = time.time()
     changes = check_files_state()
-    end_time = time.time()
     if changes:
         print("\nFile check and processing finished: Embeddings updated.")
     else:
         print("\nFile check finished: No embedding updates needed.")
-    print(f"Total time: {end_time - start_time:.2f} seconds.")
