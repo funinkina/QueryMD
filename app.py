@@ -1,16 +1,26 @@
 import asyncio
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.progress import Progress, SpinnerColumn, TextColumn
 from check_state import check_files_state
 from query_handler import query_with_llm, initialize_clients
 
 console = Console()
 
 async def main():
-    changes_detected, _ = await asyncio.gather(
-        asyncio.to_thread(check_files_state),
-        asyncio.to_thread(initialize_clients)
-    )
+    with Progress(
+        SpinnerColumn(),
+        TextColumn("[progress.description]{task.description}"),
+        console=console,
+    ) as progress:
+        task = progress.add_task("Processing files...", total=None)
+
+        changes_detected, _ = await asyncio.gather(
+            asyncio.to_thread(check_files_state),
+            asyncio.to_thread(initialize_clients)
+        )
+
+        progress.remove_task(task)
 
     if not changes_detected:
         console.print("No changes detected. Document embeddings are up-to-date.", style="green")
