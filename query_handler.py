@@ -52,10 +52,12 @@ def query_with_llm(query_text, n_results=3):
     system_prompt = """
                 You are a helpful assistant to provide user with the relevant information from the documents.
                 You will be given the context below which is extarcted from the user's notes.
-                Your task is to answer the user's question based on the context provided and also list the context from which you derived the answer.
+                Your task is to answer the user's question based on the context provided.
                 The included context might include some irrelevant information, so extract the relevant information from the context and provide the answer to the user's question.
+                If you do not get a specific query in a question format, just summarize the context.
                 """
-
+    if config["llm"]["additonal_info"]:
+        system_prompt += "\n\n" + config["llm"]["additonal_info"]
     user_context = f"""
                 RELEVANT CONTEXT:
                 ---
@@ -72,14 +74,14 @@ def query_with_llm(query_text, n_results=3):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_context}
             ],
-            temperature=0.5,
+            temperature=config["llm"]["temperature"],
             max_tokens=1024
         )
         llm_content = response.choices[0].message.content
         return llm_content, document_ids
 
     except Exception as e:
-        return "Sorry, I encountered an error while trying to generate a response.", document_ids
+        return f"An error occured: {e}", document_ids
 
 
 if __name__ == "__main__":

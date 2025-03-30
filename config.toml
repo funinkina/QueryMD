@@ -1,11 +1,13 @@
 [embeddings]
 embeddings_function = "all-MiniLM-L6-v2"
 collection_name = "notes_collection"
-embeddings_path = "./embeddings"
+embeddings_path = "/home/funinkina/Notes/.embeddings"
 
 [files]
 markdown_directory = "/home/funinkina/Notes/"
-state_file = "./.state.json"
+state_file = "/home/funinkina/Notes/.state.json"
 
 [llm]
 model_name = "llama3-8b-8192"
+temperature = 0.5
+additonal_info = "True"

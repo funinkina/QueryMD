@@ -27,7 +27,7 @@ async def main():
         return
 
     try:
-        query = console.input("[bold blue]Enter your query (or press Ctrl+C to exit): [/bold blue]")
+        query = console.input("[bold blue]Enter your query: [/bold blue]")
         if not query.strip():
             return
 
