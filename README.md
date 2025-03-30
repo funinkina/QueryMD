@@ -22,15 +22,21 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 ### 4. Configure your config.toml
-Can be used as it is, just change the `markdown_directory` to the path of your markdown files.,
+Can be used as it is, just change the `markdown_directory` to the path of your markdown files, as well for embeddings.
 ```toml
 [embeddings]
-model_name = "all-MiniLM-L6-v2"
+embeddings_function = "all-MiniLM-L6-v2"
 collection_name = "notes_collection"
-embeddings_path = "./embeddings"
+embeddings_path = "/home/funinkina/Notes/.embeddings"
 
 [files]
-markdown_directory = "</path/to/your/markdown/files>"
+markdown_directory = "/home/funinkina/Notes/"
+state_file = "/home/funinkina/Notes/.state.json"
+
+[llm]
+model_name = "llama3-8b-8192"
+temperature = 0.5
+additonal_info = "True"
 ```
 
 ### 5. Set up your environment variables
@@ -51,9 +57,10 @@ python app.py
 It will ask you for a query. You can enter any keyword or phrase related to your notes. It will return the most relevant notes based on the query.
 
 ## TODO
-- [ ] Build a TUI for easy access
+- [x] Build a TUI for easy access
 - [ ] Native Linux Package
 - [ ] Better query results
 - [ ] Better embeddings model
 - [ ] Improve Documentation
-- [ ] Include note references in the query results
+- [x] Include note references in the query results
+- [ ] Give more AI inferences options
