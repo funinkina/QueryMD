@@ -1,9 +1,15 @@
 import os
-import groq
-from openai import OpenAI
+try:
+    import groq
+except ImportError:
+    print("groq module not found. Please install it using 'pip install groq'")
+try:
+    from openai import OpenAI
+except ImportError:
+    print("openai module not found. Please install it using 'pip install openai'")
 from dotenv import load_dotenv
 import toml
-from embeddings_manager import get_chroma_collection, get_embedding_model
+from embeddings_manager import get_chroma_collection
 
 load_dotenv()
 

@@ -15,11 +15,10 @@ async def main():
         transient=True
     )
 
-    changes_detected = False
     try:
         with progress:
             task = progress.add_task("Checking file states & updating embeddings...", total=None)
-            changes_detected = await asyncio.to_thread(check_files_state)
+            await asyncio.to_thread(check_files_state)
             progress.remove_task(task)
 
     except Exception as e:
