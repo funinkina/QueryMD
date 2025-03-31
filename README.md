@@ -8,6 +8,7 @@ It uses ChromaDB as a vector database to store the embeddings of your notes and 
 ## Features ✨
 - **Search your notes 🔍**: You can search your notes using keywords or phrases.
 - **Totally local 🏠**: The embeddings are stored locally and not sent to any third-party service. The only thing that is sent to the LLM provider is the query and the context of your notes. You can read their privacy policies below to know more about how your data is being used.
+- **Ollama Support 🦙**: Support for completely locally running AI model using Ollama.
 - **Git integration 🛠️**: It uses git to track changes in your notes and update the embeddings accordingly.
 - **State tracking 📂**: It uses a state file to keep track of the embeddings and notes, if git is not available.
 - **AI-powered 🤖**: It uses AI to understand the context of your notes and provide relevant results.
@@ -109,8 +110,7 @@ It will ask you for a query. You can enter any keyword or phrase related to your
 - [ ] Improve Documentation
 - [x] Include note references in the query results
 - [ ] Add support for other LLM providers
-
-- [ ] Add support for local models via ollama
+- [x] Add support for local models via ollama
 
 ## You can read privacy policies of LLM providers here to know more about how your data is being used: 🔒
 - [Groq](https://groq.com/privacy-policy/)

@@ -12,7 +12,7 @@ state_file = "/home/funinkina/Notes/.state.json"
 method = "git"  # Options: "mtime", "git"
 
 [llm]
-provider = "groq" # Options: "groq" or "openai"
+provider = "groq" # Options: "groq" or "openai" or "ollama"
 model_name = "llama3-8b-8192"
 # model_name = "gpt-4o"
 temperature = 0.5

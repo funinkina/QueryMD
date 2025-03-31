@@ -7,7 +7,6 @@ try:
     from openai import OpenAI
 except ImportError:
     print("openai module not found. Please install it using 'pip install openai'")
-# Add import for ollama
 try:
     import ollama
 except ImportError:
