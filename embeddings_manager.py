@@ -31,11 +31,11 @@ def get_chroma_collection():
     if _collection is None:
         with _lock:
             if _collection is None:
-                print("Initializing ChromaDB client...")
+                # print("Initializing ChromaDB client...")
                 _chroma_client = chromadb.PersistentClient(path=embeddings_config["embeddings_path"])
-                print("ChromaDB client initialized.")
+                # print("ChromaDB client initialized.")
                 collection_name = embeddings_config["collection_name"]
-                print(f"Getting or creating ChromaDB collection: {collection_name}...")
+                # print(f"Getting or creating ChromaDB collection: {collection_name}...")
                 _collection = _chroma_client.get_or_create_collection(
                     name=collection_name,
                     embedding_function=embedding_functions.SentenceTransformerEmbeddingFunction(

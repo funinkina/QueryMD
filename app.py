@@ -2,7 +2,7 @@ import asyncio
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.progress import Progress, SpinnerColumn, TextColumn
-from check_state import check_files_state
+from tracking.check_state import check_files_state
 from query_handler import query_with_llm
 
 console = Console()

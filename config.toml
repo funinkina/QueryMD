@@ -7,6 +7,10 @@ embeddings_path = "/home/funinkina/Notes/.embeddings"
 markdown_directory = "/home/funinkina/Notes/"
 state_file = "/home/funinkina/Notes/.state.json"
 
+[state_tracking]
+# choose "mtime" if you are not tracking changes with git
+method = "git"  # Options: "mtime", "git"
+
 [llm]
 provider = "groq" # Options: "groq" or "openai"
 model_name = "llama3-8b-8192"
