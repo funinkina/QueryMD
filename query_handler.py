@@ -57,7 +57,7 @@ def relevant_documents(query_text, n_results=2):
     results = collection.query(
         query_texts=[query_text],
         n_results=n_results,
-        include=['documents', 'ids']
+        include=['documents']
     )
 
     documents = results.get('documents', [[]])[0]
